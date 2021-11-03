@@ -23,12 +23,19 @@ const layers = {
       maxZoom: map.getMaxZoom(),
       attribution: "USGS",
     }),
-    "Trail Map": L.tileLayer.mbTiles("data/trail_map.mbtiles", {
+    "Winter Trails Map": L.tileLayer.mbTiles("data/trail_map_winter.mbtiles", {
+      autoScale: true,
+      updateWhenIdle: false
+    }).once("databaseloaded", (e) => {
+      layers.basemaps["Winter Trails Map"].bringToFront();
+      map.removeLayer(layers.basemaps["Winter Trails Map"])
+    }).addTo(map),
+    "Summer Trails Map": L.tileLayer.mbTiles("data/trail_map.mbtiles", {
       autoScale: true,
       fitBounds: true,
       updateWhenIdle: false
     }).on("databaseloaded", (e) => {
-      map.setMaxBounds(L.latLngBounds(layers.basemaps["Trail Map"].options.bounds).pad(0.1));
+      map.setMaxBounds(L.latLngBounds(layers.basemaps["Summer Trails Map"].options.bounds).pad(0.1));
       controls.locateCtrl.start();
     })
   }
@@ -92,6 +99,10 @@ const controls = {
       enableHighAccuracy: true,
       maxZoom: 18
     },
+    onLocationOutsideMapBounds: function(control) {
+      // control.stop();
+      // alert(control.options.strings.outsideMapBoundsMsg);
+    },
     onLocationError: (e) => {
       hideLoader();
       document.querySelector(".leaflet-control-locate").getElementsByTagName("span")[0].className = "icon-gps_off";
@@ -105,7 +116,7 @@ const controls = {
 };
 
 function ZoomToExtent() {
-  map.fitBounds(layers.basemaps["Trail Map"].options.bounds);
+  map.fitBounds(layers.basemaps["Summer Trails Map"].options.bounds);
 }
 
 function showLoader() {
@@ -122,5 +133,5 @@ initSqlJs({
   }
 }).then(function(SQL){
   hideLoader();
-  layers.basemaps["Trail Map"].addTo(map);
+  layers.basemaps["Summer Trails Map"].addTo(map);
 });
