@@ -38,6 +38,22 @@ const layers = {
       map.setMaxBounds(L.latLngBounds(layers.basemaps["Summer Trails Map"].options.bounds).pad(0.1));
       controls.locateCtrl.start();
     })
+  },
+  overlays: {
+    "Points of Interest": L.geoJSON(null, {
+      pointToLayer: function (feature, latlng) {
+        return L.marker(latlng, {
+          icon: L.icon({
+            iconUrl: `assets/img/icons/${feature.properties.icon}.png`,
+            iconSize: [32, 37],
+            iconAnchor: [16, 37],
+            popupAnchor: [0, -28]
+          })
+        });
+      }
+    }).bindPopup(function (layer) {
+        return layer.feature.properties.name;
+    }, {closeButton: false}).addTo(map)
   }
 };
 
@@ -63,7 +79,7 @@ L.control.zoomextent = (opts) => {
 /*** End custom control ***/
 
 const controls = {
-  layerCtrl: L.control.layers(layers.basemaps, null, {
+  layerCtrl: L.control.layers(layers.basemaps, layers.overlays, {
     collapsed: true,
     position: "topright"
   }).addTo(map),
@@ -119,6 +135,12 @@ function ZoomToExtent() {
   map.fitBounds(layers.basemaps["Summer Trails Map"].options.bounds);
 }
 
+function loadData() {
+  fetch('data/aic_points/aic_points.geojson')
+  .then(response => response.json())
+  .then(data => layers.overlays["Points of Interest"].addData(data));
+}
+
 function showLoader() {
   document.getElementById("progress-bar").style.display = "block";
 }
@@ -133,5 +155,6 @@ initSqlJs({
   }
 }).then(function(SQL){
   hideLoader();
+  loadData();
   layers.basemaps["Summer Trails Map"].addTo(map);
 });
