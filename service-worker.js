@@ -8,7 +8,7 @@ workbox.setConfig({
 workbox.precaching.precacheAndRoute([
   {url: 'index.html', revision: '11.04.21.1'},
   {url: 'manifest.json', revision: '10.01.21.1'},
-  {url: 'assets/js/app.js', revision: '11.04.21.1'},
+  {url: 'assets/js/app.js', revision: '11.05.21.1'},
   {url: 'assets/css/app.css', revision: '10.01.21.1'},
   {url: 'assets/img/apple-touch-icon.png', revision: '10.01.21.1'},
   {url: 'assets/img/favicon-32x32.png', revision: '10.01.21.1'},
@@ -46,6 +46,7 @@ workbox.precaching.precacheAndRoute([
   {url: 'data/trail_map_winter.mbtiles', revision: '11.02.21.1'},
   {url: 'data/aic_points/aic_points.geojson', revision: '11.04.21.1'},
   {url: 'data/aic_points/audio/d65b6ffe-ea59-45c3-8e89-bb08df759cf4.mp3', revision: '11.04.21.1'},
+  {url: 'data/aic_points/audio/75b4cb74-003c-413f-a078-2e6dbdd325a6.mp3', revision: '11.05.21.1'},
   {url: 'data/aic_points/photos/0b6a5975-4191-446c-a970-5c1d209609d9.jpg', revision: '11.04.21.1'},
   {url: 'data/aic_points/photos/1e330393-10f3-4e18-86ab-6be84f370673.jpg', revision: '11.04.21.1'},
   {url: 'data/aic_points/photos/2cda4cec-bbf7-4fa8-9653-24880baf5387.jpg', revision: '11.04.21.1'},
