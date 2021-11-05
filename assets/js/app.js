@@ -1,3 +1,7 @@
+const featureModal = new bootstrap.Modal(document.getElementById("featureModal"), {
+  keyboard: false
+});
+
 const map = L.map("map", {
   zoomSnap: L.Browser.mobile ? 0 : 1,
   tap: (L.Browser.safari && !L.Browser.mobile) ? false : true,
@@ -62,7 +66,7 @@ const layers = {
             layers.select.clearLayers();
           },
           click: (e) => {
-            showPopupModal(feature.properties);
+            showFeatureModal(feature.properties);
             layers.select.clearLayers();
             layers.select.addLayer(L.geoJSON(layer.toGeoJSON(), {
               style: {
@@ -175,11 +179,8 @@ function loadData() {
   }));
 }
 
-function showPopupModal(properties) {
+function showFeatureModal(properties) {
   let photos = [];
-  let modal = new bootstrap.Modal(document.getElementById("popupModal"), {
-    keyboard: false
-  });
   document.getElementById("feature-title").innerHTML = properties.name;
   document.getElementById("feature-subtitle").innerHTML = properties.icon;
   document.getElementById("feature-general_description").innerHTML = properties.general_description;
@@ -195,12 +196,12 @@ function showPopupModal(properties) {
     photos = photos.concat(properties.photo_other.split(","));
   }
   if (properties.audio) {
-    document.getElementById("feature-other_photos").insertAdjacentHTML("beforeend", `<div class="p-2 flex-fill"><audio class="mx-auto d-block" controls=""><source type="audio/mpeg" src="data/aic_points/audio/${properties.audio}.mp3"> Your browser does not support the audio element.</audio></div>`)
+    document.getElementById("feature-other_photos").insertAdjacentHTML("beforeend", `<div class="p-2 flex-fill"><audio id="audio" class="mx-auto d-block" controls=""><source type="audio/mpeg" src="data/aic_points/audio/${properties.audio}.mp3"> Your browser does not support the audio element.</audio></div>`)
   }
   photos.forEach(photo => {
     document.getElementById("feature-other_photos").insertAdjacentHTML("beforeend", `<div class="p-2 flex-fill"><a href="data/aic_points/photos/${photo}.jpg" target="_blank"><img src="data/aic_points/photos/${photo}.jpg" class="img-thumbnail mx-auto d-block" style="max-height: 100px" alt="photo"></img></a></div>`);
   });
-  modal.show();
+  featureModal.show();
 }
 
 function showLoader() {
@@ -210,6 +211,13 @@ function showLoader() {
 function hideLoader() {
   document.getElementById("progress-bar").style.display = "none";
 }
+
+document.getElementById("featureModal").addEventListener("hidden.bs.modal", function (event) {
+  let audioPlayer = document.getElementById("audio");
+  if (audioPlayer) {
+    audioPlayer.pause();
+  }
+})
 
 initSqlJs({
   locateFile: function() {
