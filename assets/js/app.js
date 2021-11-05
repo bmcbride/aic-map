@@ -50,9 +50,9 @@ const layers = {
           title: feature.properties.name,
           icon: L.icon({
             iconUrl: `assets/img/icons/${feature.properties.icon}.png`,
-            iconSize: [32, 37],
-            iconAnchor: [16, 37],
-            popupAnchor: [0, -28]
+            iconSize: [16, 18],
+            iconAnchor: [8, 18],
+            popupAnchor: [0, -14]
           })
         });
       },
