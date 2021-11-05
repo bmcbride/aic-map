@@ -166,9 +166,13 @@ function ZoomToExtent() {
 }
 
 function loadData() {
-  fetch('data/aic_points/aic_points.geojson')
-  .then(response => response.json())
-  .then(data => layers.overlays["Points of Interest"].addData(data));
+  fetch('data/aic_points/aic_points.csv')
+  .then(response => response.text())
+  .then(data => csv2geojson.csv2geojson(data, {}, function(err, data) {
+    if (data) {
+      layers.overlays["Points of Interest"].addData(data);
+    }
+  }));
 }
 
 function showPopupModal(properties) {
@@ -179,6 +183,7 @@ function showPopupModal(properties) {
   document.getElementById("feature-title").innerHTML = properties.name;
   document.getElementById("feature-subtitle").innerHTML = properties.icon;
   document.getElementById("feature-general_description").innerHTML = properties.general_description;
+  document.getElementById("feature-_server_updated_at").innerHTML = new Date(properties._server_updated_at).toLocaleString(undefined, {year: "numeric", month: "long", day: "numeric"});
   document.getElementById("feature-other_photos").innerHTML = "";
   if (properties.photo_marquee) {
     document.getElementById("feature-photo_marquee").innerHTML = `<a href="data/aic_points/photos/${properties.photo_marquee}.jpg" target="_blank"><img src="data/aic_points/photos/${properties.photo_marquee}.jpg" class="img-fluid mx-auto d-block" alt="photo"></img>`;
