@@ -13,6 +13,7 @@
     <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="assets/img/favicon-16x16.png">
+    <link rel="stylesheet" href="assets/vendor/bootstrap-5.1.3/css/bootstrap.min.css">
     <link rel="stylesheet" href="assets/vendor/leaflet-1.7.1/leaflet.css">
     <link rel="stylesheet" href="assets/vendor/leaflet-locatecontrol-0.74.0/L.Control.Locate.min.css">
     <link rel="stylesheet" href="assets/vendor/icomoon/style.css">
@@ -24,7 +25,30 @@
         <div class="indeterminate"></div>
       </div>
     </main>
+    <div class="modal" id="popupModal" tabindex="-1">
+      <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+          <div class="modal-header">
+            <div class="flex-column">
+              <h5 class="modal-title" id="feature-title"></h5>
+              <h6 class="mb-0 text-muted" id="feature-subtitle"></h6>
+           </div>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <p id="feature-photo_marquee"></p>
+            <p id="feature-general_description"></p>
+            <hr>
+            <div id="feature-other_photos" class="d-flex"></div>
+          </div>
+          <!-- <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          </div> -->
+        </div>
+      </div>
+    </div>
     <script src="assets/vendor/sqljs-1.6.2/sql-wasm.js"></script>
+    <script src="assets/vendor/bootstrap-5.1.3/js/bootstrap.bundle.min.js"></script>
     <script src="assets/vendor/leaflet-1.7.1/leaflet.js"></script>
     <script src="assets/vendor/leaflet-locatecontrol-0.74.0/L.Control.Locate.min.js"></script>
     <script src="assets/vendor/leaflet-mbtiles/Leaflet.TileLayer.MBTiles.js"></script>

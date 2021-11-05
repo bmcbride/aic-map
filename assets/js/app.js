@@ -6,6 +6,10 @@ const map = L.map("map", {
 }).fitWorld();
 map.attributionControl.setPrefix("");
 
+map.on("click", (e) => {
+  layers.select.clearLayers();
+});
+
 const layers = {
   basemaps: {
     "Streets": L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.@2xpng", {
@@ -41,8 +45,9 @@ const layers = {
   },
   overlays: {
     "Points of Interest": L.geoJSON(null, {
-      pointToLayer: function (feature, latlng) {
+      pointToLayer: (feature, latlng) => {
         return L.marker(latlng, {
+          title: feature.properties.name,
           icon: L.icon({
             iconUrl: `assets/img/icons/${feature.properties.icon}.png`,
             iconSize: [32, 37],
@@ -50,11 +55,36 @@ const layers = {
             popupAnchor: [0, -28]
           })
         });
+      },
+      onEachFeature: (feature, layer) => {
+        layer.on({
+          popupclose: (e) => {
+            layers.select.clearLayers();
+          },
+          click: (e) => {
+            showPopupModal(feature.properties);
+            layers.select.clearLayers();
+            layers.select.addLayer(L.geoJSON(layer.toGeoJSON(), {
+              style: {
+                color: "#00FFFF",
+                weight: 5
+              },
+              pointToLayer: (feature, latlng) => {
+                return L.circleMarker(latlng, {
+                  radius: 8,
+                  color: "#00FFFF",
+                  fillColor: "#00FFFF",
+                  fillOpacity: 1
+                }); 
+              }
+            }))
+          }
+        });
       }
-    }).bindPopup(function (layer) {
-        return layer.feature.properties.name;
-    }, {closeButton: false}).addTo(map)
-  }
+    })
+    .addTo(map)
+  },
+  select: L.featureGroup(null).addTo(map)
 };
 
 /*** Begin Zoom Extent Control ***/
@@ -139,6 +169,33 @@ function loadData() {
   fetch('data/aic_points/aic_points.geojson')
   .then(response => response.json())
   .then(data => layers.overlays["Points of Interest"].addData(data));
+}
+
+function showPopupModal(properties) {
+  let photos = [];
+  let modal = new bootstrap.Modal(document.getElementById("popupModal"), {
+    keyboard: false
+  });
+  document.getElementById("feature-title").innerHTML = properties.name;
+  document.getElementById("feature-subtitle").innerHTML = properties.icon;
+  document.getElementById("feature-general_description").innerHTML = properties.general_description;
+  document.getElementById("feature-other_photos").innerHTML = "";
+  if (properties.photo_marquee) {
+    document.getElementById("feature-photo_marquee").innerHTML = `<a href="data/aic_points/photos/${properties.photo_marquee}.jpg" target="_blank"><img src="data/aic_points/photos/${properties.photo_marquee}.jpg" class="img-fluid mx-auto d-block" alt="photo"></img>`;
+    photos.push(properties.photo_marquee);
+  } else {
+    document.getElementById("feature-photo_marquee").innerHTML = "";
+  }
+  if (properties.photo_other) {
+    photos = photos.concat(properties.photo_other.split(","));
+  }
+  if (properties.audio) {
+    document.getElementById("feature-other_photos").insertAdjacentHTML("beforeend", `<div class="p-2 flex-fill"><audio class="mx-auto d-block" controls=""><source type="audio/mpeg" src="data/aic_points/audio/${properties.audio}.mp3"> Your browser does not support the audio element.</audio></div>`)
+  }
+  photos.forEach(photo => {
+    document.getElementById("feature-other_photos").insertAdjacentHTML("beforeend", `<div class="p-2 flex-fill"><a href="data/aic_points/photos/${photo}.jpg" target="_blank"><img src="data/aic_points/photos/${photo}.jpg" class="img-thumbnail mx-auto d-block" style="max-height: 100px" alt="photo"></img></a></div>`);
+  });
+  modal.show();
 }
 
 function showLoader() {
