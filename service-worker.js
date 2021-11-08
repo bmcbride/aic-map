@@ -45,7 +45,7 @@ workbox.precaching.precacheAndRoute([
   {url: 'assets/vendor/csv2geojson-5.1.1/csv2geojson.min.js', revision: '11.05.21.2'},
   {url: 'data/trail_map.mbtiles', revision: '11.02.21.2'},
   {url: 'data/trail_map_winter.mbtiles', revision: '11.02.21.1'},
-  {url: 'data/aic_points/aic_points.csv', revision: '11.05.21.1'},
+  {url: 'data/aic_points/aic_points.csv', revision: '11.08.21.1'},
   {url: 'data/aic_points/audio/d65b6ffe-ea59-45c3-8e89-bb08df759cf4.mp3', revision: '11.04.21.1'},
   {url: 'data/aic_points/audio/75b4cb74-003c-413f-a078-2e6dbdd325a6.mp3', revision: '11.05.21.1'},
   {url: 'data/aic_points/photos/0b6a5975-4191-446c-a970-5c1d209609d9.jpg', revision: '11.04.21.1'},
