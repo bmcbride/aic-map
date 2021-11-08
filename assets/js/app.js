@@ -38,7 +38,7 @@ const layers = {
       layers.basemaps["Winter Trails Map"].bringToFront();
       map.removeLayer(layers.basemaps["Winter Trails Map"])
     }).addTo(map),
-    "Summer Trails Map": L.tileLayer.mbTiles("data/trail_map.mbtiles", {
+    "Summer Trails Map": L.tileLayer.mbTiles("data/trail_map_new.mbtiles", {
       autoScale: true,
       fitBounds: true,
       updateWhenIdle: false
@@ -50,14 +50,19 @@ const layers = {
   overlays: {
     "Points of Interest": L.geoJSON(null, {
       pointToLayer: (feature, latlng) => {
-        return L.marker(latlng, {
+        return L.circle(latlng, {
           title: feature.properties.name,
-          icon: L.icon({
-            iconUrl: `assets/img/icons/${feature.properties.icon}.png`,
-            iconSize: [16, 18],
-            iconAnchor: [8, 18],
-            popupAnchor: [0, -14]
-          })
+          radius: 8,
+          color: "green",
+          fillColor: "blue",
+          stroke: 1,
+          fillOpacity: 1
+          // icon: L.icon({
+          //   iconUrl: `assets/img/icons/${feature.properties.icon}.png`,
+          //   iconSize: [16, 18],
+          //   iconAnchor: [8, 18],
+          //   popupAnchor: [0, -14]
+          // })
         });
       },
       onEachFeature: (feature, layer) => {
@@ -75,7 +80,7 @@ const layers = {
               },
               pointToLayer: (feature, latlng) => {
                 return L.circleMarker(latlng, {
-                  radius: 8,
+                  radius: 6,
                   color: "#00FFFF",
                   fillColor: "#00FFFF",
                   fillOpacity: 1
@@ -183,8 +188,8 @@ function showFeatureModal(properties) {
   let photos = [];
   document.getElementById("feature-title").innerHTML = properties.name;
   document.getElementById("feature-subtitle").innerHTML = properties.icon;
-  document.getElementById("feature-general_description").innerHTML = properties.general_description;
-  document.getElementById("feature-_server_updated_at").innerHTML = new Date(properties._server_updated_at).toLocaleString(undefined, {year: "numeric", month: "long", day: "numeric"});
+  document.getElementById("feature-general_description").innerHTML = properties.description;
+  // document.getElementById("feature-_server_updated_at").innerHTML = new Date(properties._server_updated_at).toLocaleString(undefined, {year: "numeric", month: "long", day: "numeric"});
   document.getElementById("feature-other_photos").innerHTML = "";
   if (properties.photo_marquee) {
     document.getElementById("feature-photo_marquee").innerHTML = `<a href="data/aic_points/photos/${properties.photo_marquee}.jpg" target="_blank"><img src="data/aic_points/photos/${properties.photo_marquee}.jpg" class="img-fluid mx-auto d-block" alt="photo"></img>`;
